@@ -1,7 +1,8 @@
 <!--
---- Readme.md Snippet without images Start ---
+&lt;--- Readme.md Snippet without images Start ---&gt;
 ## Tech Stack
 maxgfr/matomo-next is built on the following main stack:
+
 - [Jest](http://facebook.github.io/jest/) – Javascript Testing Framework
 - [React](https://reactjs.org/) – Javascript UI Libraries
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) – Languages
@@ -13,11 +14,13 @@ maxgfr/matomo-next is built on the following main stack:
 - [GitHub Actions](https://github.com/features/actions) – Continuous Integration
 
 Full tech stack [here](/techstack.md)
---- Readme.md Snippet without images End ---
 
---- Readme.md Snippet with images Start ---
+&lt;--- Readme.md Snippet without images End ---&gt;
+
+&lt;--- Readme.md Snippet with images Start ---&gt;
 ## Tech Stack
 maxgfr/matomo-next is built on the following main stack:
+
 - <img width='25' height='25' src='https://img.stackshare.io/service/830/jest.png' alt='Jest'/> [Jest](http://facebook.github.io/jest/) – Javascript Testing Framework
 - <img width='25' height='25' src='https://img.stackshare.io/service/1020/OYIaJ1KK.png' alt='React'/> [React](https://reactjs.org/) – Javascript UI Libraries
 - <img width='25' height='25' src='https://img.stackshare.io/service/1209/javascript.jpeg' alt='JavaScript'/> [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) – Languages
@@ -29,14 +32,15 @@ maxgfr/matomo-next is built on the following main stack:
 - <img width='25' height='25' src='https://img.stackshare.io/service/11563/actions.png' alt='GitHub Actions'/> [GitHub Actions](https://github.com/features/actions) – Continuous Integration
 
 Full tech stack [here](/techstack.md)
---- Readme.md Snippet with images End ---
+
+&lt;--- Readme.md Snippet with images End ---&gt;
 -->
 <div align="center">
 
 # Tech Stack File
 ![](https://img.stackshare.io/repo.svg "repo") [maxgfr/matomo-next](https://github.com/maxgfr/matomo-next)![](https://img.stackshare.io/public_badge.svg "public")
 <br/><br/>
-|14<br/>Tools used|11/10/23 <br/>Report generated|
+|15<br/>Tools used|12/14/23 <br/>Report generated|
 |------|------|
 </div>
 
@@ -121,7 +125,7 @@ Full tech stack [here](/techstack.md)
   <br>
   <sub><a href="https://prettier.io/">Prettier</a></sub>
   <br>
-  <sub>v2.8.8</sub>
+  <sub>v3.1.1</sub>
 </td>
 
 <td align='center'>
@@ -144,17 +148,18 @@ Full tech stack [here](/techstack.md)
 </table>
 
 
-## <img src='https://img.stackshare.io/group.svg' /> Open source packages (3)</h2>
+## <img src='https://img.stackshare.io/group.svg' /> Open source packages (4)</h2>
 
-## <img width='24' height='24' src='https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png'/> npm (3)
+## <img width='24' height='24' src='https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png'/> npm (4)
 
 |NAME|VERSION|LAST UPDATED|LAST UPDATED BY|LICENSE|VULNERABILITIES|
 |:------|:------|:------|:------|:------|:------|
-|[@types/jest](https://www.npmjs.com/@types/jest)|v26.0.24|09/21/23|Lilian Saget-Lethias |MIT|N/A|
+|[@types/jest](https://www.npmjs.com/@types/jest)|v26.0.24|12/10/23|renovate[bot] |MIT|N/A|
+|[eslint-config-prettier](https://www.npmjs.com/eslint-config-prettier)|v9.1.0|12/10/23|renovate[bot] |MIT|N/A|
 |[react-dom](https://www.npmjs.com/react-dom)|v16.14.0|01/16/23|renovate[bot] |MIT|N/A|
 |[ts-jest](https://www.npmjs.com/ts-jest)|v26.5.6|07/11/21|renovate[bot] |MIT|N/A|
 
 <br/>
 <div align='center'>
 
-Generated via [Stack File](https://github.com/apps/stack-file)
+Generated via [Stack File](https://github.com/marketplace/stack-file)
