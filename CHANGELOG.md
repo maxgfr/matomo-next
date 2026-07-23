@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/SocialGouv/matomo-next/compare/v1.13.1...v1.13.2) (2026-07-23)
+
+
+### Bug Fixes
+
+* **server-proxy:** use an App Router-compatible internal route path ([#161](https://github.com/SocialGouv/matomo-next/issues/161)) ([3fd9212](https://github.com/SocialGouv/matomo-next/commit/3fd9212c01145f3507ee191f50b11bafbddaeb1c))
+
 ## [1.13.1](https://github.com/SocialGouv/matomo-next/compare/v1.13.0...v1.13.1) (2026-02-27)
 
 
