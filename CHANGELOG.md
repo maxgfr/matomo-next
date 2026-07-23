@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/SocialGouv/matomo-next/compare/v1.14.0...v1.14.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* **server-proxy:** use a neutral internal route path (/api/mp) ([#163](https://github.com/SocialGouv/matomo-next/issues/163)) ([9517089](https://github.com/SocialGouv/matomo-next/commit/95170897ecbb1560a8f2968a2953cf40ecdf5b5a))
+
 # [1.14.0](https://github.com/SocialGouv/matomo-next/compare/v1.13.2...v1.14.0) (2026-07-23)
 
 
