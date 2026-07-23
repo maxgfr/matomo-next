@@ -93,8 +93,55 @@ describe("withMatomoProxy", () => {
       /^\/api\/a[a-f0-9]{10}\/:path\*$/,
     );
     expect((rewrites as any).beforeFiles[0].destination).toBe(
-      "/api/__mp/:path*",
+      "/api/matomo/:path*",
     );
+  });
+
+  it("should use custom handlerPath as rewrite destination", async () => {
+    const config = withMatomoProxy({
+      matomoUrl: MATOMO_URL,
+      handlerPath: "/api/my-handler",
+    })({} as any);
+    const rewrites = await config.rewrites!();
+
+    expect((rewrites as any).beforeFiles[0].destination).toBe(
+      "/api/my-handler/:path*",
+    );
+  });
+
+  it("should strip trailing slash from handlerPath", async () => {
+    const config = withMatomoProxy({
+      matomoUrl: MATOMO_URL,
+      handlerPath: "/api/my-handler/",
+    })({} as any);
+    const rewrites = await config.rewrites!();
+
+    expect((rewrites as any).beforeFiles[0].destination).toBe(
+      "/api/my-handler/:path*",
+    );
+  });
+
+  it("should warn when a handlerPath segment starts with an underscore", () => {
+    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    withMatomoProxy({
+      matomoUrl: MATOMO_URL,
+      handlerPath: "/api/__mp",
+    })({} as any);
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining("private folders"),
+    );
+    warnSpy.mockRestore();
+  });
+
+  it("should not warn for the default handlerPath", () => {
+    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    withMatomoProxy({ matomoUrl: MATOMO_URL })({} as any);
+
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
   });
 
   it("should preserve existing rewrites", async () => {
