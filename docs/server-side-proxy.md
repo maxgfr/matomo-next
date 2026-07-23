@@ -14,7 +14,7 @@ Ad-blockers commonly block requests to known analytics domains (e.g. `*.matomo.c
 ## How It Works
 
 ```
-Browser → yoursite.com/api/a3f7b2c1e9/t3fa1c0d2e4 → [Next.js rewrite] → /api/matomo/t3fa1c0d2e4 → [API handler] → analytics.example.com/matomo.php
+Browser → yoursite.com/api/a3f7b2c1e9/t3fa1c0d2e4 → [Next.js rewrite] → /api/mp/t3fa1c0d2e4 → [API handler] → analytics.example.com/matomo.php
 ```
 
 Notes:
@@ -26,7 +26,7 @@ Notes:
   `proxyPath` that you know won’t overlap with your existing API routes.
 
 1. `withMatomoProxy()` generates a **random** proxy path at build time (e.g. `/api/a3f7b2c1e9`)
-2. It adds a Next.js rewrite: `/api/{random}/:path*` → `/api/matomo/:path*`
+2. It adds a Next.js rewrite: `/api/{random}/:path*` → `/api/mp/:path*`
 3. You create a catch-all API route with `createMatomoProxyHandler()` that forwards requests to Matomo
 4. The browser only ever talks to **your** domain — ad-blockers see nothing suspicious
 5. On next deploy, a **new random path** is generated — impossible to maintain a blocklist
@@ -58,7 +58,7 @@ export default withMatomoProxy({
 Create a catch-all route that forwards requests to Matomo:
 
 ```ts
-// app/api/matomo/[...path]/route.ts
+// app/api/mp/[...path]/route.ts
 import { createMatomoProxyHandler } from "@socialgouv/matomo-next/lib/server-proxy";
 
 export const { GET, POST } = createMatomoProxyHandler();
@@ -122,7 +122,7 @@ export function MatomoProvider() {
    `https://yoursite.com/api/{random}/{opaque}.js`.
 4. Events triggered via Matomo (including what you queue through `push()` / `sendEvent()`) are sent by the tracker to
    `https://yoursite.com/api/{random}/{opaque}`.
-5. Next.js rewrites those requests to `/api/matomo/...` and [`createMatomoProxyHandler()`](src/server-proxy.ts:237) forwards them to your Matomo instance (`matomo.js` / `matomo.php`).
+5. Next.js rewrites those requests to `/api/mp/...` and [`createMatomoProxyHandler()`](src/server-proxy.ts:237) forwards them to your Matomo instance (`matomo.js` / `matomo.php`).
 
 If you still want an explicit fallback to the direct Matomo URL, you can keep
 passing `url` yourself:
@@ -168,12 +168,12 @@ trackAppRouter({ url, siteId, pathname, searchParams });
 
 Wraps your Next.js config to add proxy rewrite rules and environment variables.
 
-| Option        | Type     | Required | Description                                                                                                                              |
-| ------------- | -------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `matomoUrl`   | `string` | ✅       | Full URL of your Matomo instance                                                                                                         |
-| `proxyPath`   | `string` | ❌       | Custom proxy path (default: random per build). ⚠️ Fixed paths reduce ad-block resistance                                                 |
-| `handlerPath` | `string` | ❌       | Internal path of the API route hosting the handler (default: `/api/matomo`). ⚠️ Avoid `_`-prefixed segments (App Router private folders) |
-| `siteId`      | `string` | ❌       | Injected as `NEXT_PUBLIC_MATOMO_PROXY_SITE_ID` env var                                                                                   |
+| Option        | Type     | Required | Description                                                                                                                          |
+| ------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `matomoUrl`   | `string` | ✅       | Full URL of your Matomo instance                                                                                                     |
+| `proxyPath`   | `string` | ❌       | Custom proxy path (default: random per build). ⚠️ Fixed paths reduce ad-block resistance                                             |
+| `handlerPath` | `string` | ❌       | Internal path of the API route hosting the handler (default: `/api/mp`). ⚠️ Avoid `_`-prefixed segments (App Router private folders) |
+| `siteId`      | `string` | ❌       | Injected as `NEXT_PUBLIC_MATOMO_PROXY_SITE_ID` env var                                                                               |
 
 **Environment variables set:**
 
@@ -198,7 +198,7 @@ The handler forwards:
 - Client IP (`X-Forwarded-For`) for geolocation accuracy
 
 ```ts
-// app/api/matomo/[...path]/route.ts
+// app/api/mp/[...path]/route.ts
 import { createMatomoProxyHandler } from "@socialgouv/matomo-next/lib/server-proxy";
 export const { GET, POST } = createMatomoProxyHandler();
 ```
@@ -280,10 +280,10 @@ export default withMatomoProxy({
 
 ### Pages Router API route
 
-If you're using the Pages Router instead of App Router, create the handler at `pages/api/matomo/[...path].ts`:
+If you're using the Pages Router instead of App Router, create the handler at `pages/api/mp/[...path].ts`:
 
 ```ts
-// pages/api/matomo/[...path].ts
+// pages/api/mp/[...path].ts
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -345,10 +345,10 @@ return a 404, and the JS tracker request fails with
 `Refused to execute script … its MIME type ('text/html') is not executable`
 (the 404 HTML page is served instead of JavaScript).
 
-The default internal route is now `/api/matomo`, which is routable in both the
+The default internal route is now `/api/mp`, which is routable in both the
 App Router and the Pages Router. If you created your handler at
 `app/api/__mp/[...path]/route.ts` (or `app/api/%5F%5Fmp/[...path]/route.ts` as
-a workaround), move it to `app/api/matomo/[...path]/route.ts`.
+a workaround), move it to `app/api/mp/[...path]/route.ts`.
 
 ### Turbopack build error on Next.js 16: `Could not parse module '…/app-route/vendored/contexts/router-context.js'`
 
@@ -368,7 +368,7 @@ import { createMatomoProxyHandler } from "@socialgouv/matomo-next/lib/server-pro
 
 The Pages Router does **not** have the private-folder convention, so
 `pages/api/__mp/[...path].ts` worked there. After upgrading, either rename the
-folder to `pages/api/matomo/`, or keep it and pin the old internal path:
+folder to `pages/api/mp/`, or keep it and pin the old internal path:
 
 ```js
 export default withMatomoProxy({

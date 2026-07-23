@@ -7,8 +7,8 @@
  *
  * How it works:
  * 1. `withMatomoProxy()` generates a random path at build time (e.g. `/api/a3f7b2c1e9`)
- * 2. It adds a Next.js rewrite: `/api/{random}/:path*` → `/api/matomo/:path*`
- * 3. You create a catch-all API route at `app/api/matomo/[...path]/route.ts`
+ * 2. It adds a Next.js rewrite: `/api/{random}/:path*` → `/api/mp/:path*`
+ * 3. You create a catch-all API route at `app/api/mp/[...path]/route.ts`
  *    that uses `createMatomoProxyHandler()` to forward requests to Matomo
  * 4. The browser only ever talks to YOUR domain — ad-blockers see nothing suspicious
  * 5. Each build produces a different path, so blockers can't hardcode it
@@ -49,7 +49,7 @@ export interface MatomoProxyOptions {
    * Set it to `/api/__mp` only if you have an existing Pages Router setup
    * at `pages/api/__mp/[...path].ts` that you don't want to rename.
    *
-   * @default "/api/matomo"
+   * @default "/api/mp"
    */
   handlerPath?: string;
   /**
@@ -140,10 +140,12 @@ export function generateProxyPath(): string {
 // withMatomoProxy – Next.js config wrapper
 // ---------------------------------------------------------------------------
 
-// The internal route is never seen by the browser (it's a server-side rewrite
-// destination), so it doesn't need to be opaque. It must be routable in BOTH
-// routers — in particular, no `_`-prefixed segment (App Router private folder).
-const DEFAULT_HANDLER_PATH = "/api/matomo";
+// The internal route is a server-side rewrite destination, never requested by
+// the browser. Still, keep the name neutral (no "matomo"): the route is also
+// directly reachable at its real path, and URL-pattern filter lists should
+// have nothing to match on. It must be routable in BOTH routers — in
+// particular, no `_`-prefixed segment (App Router private folder).
+const DEFAULT_HANDLER_PATH = "/api/mp";
 
 /**
  * Wraps your Next.js config to add a server-side proxy for Matomo.
@@ -155,7 +157,7 @@ const DEFAULT_HANDLER_PATH = "/api/matomo";
  * 4. Exposes `MATOMO_PROXY_TARGET` (server-only) for the API route handler
  *
  * The browser sends tracking requests to `yoursite.com/api/{random}/{opaque}`.
- * Next.js rewrites them to `/api/matomo/{opaque}`, where the handler
+ * Next.js rewrites them to `/api/mp/{opaque}`, where the handler
  * forwards them to your Matomo instance.
  *
  * @example
@@ -263,7 +265,7 @@ export function withMatomoProxy(options: MatomoProxyOptions) {
  *
  * @example
  * ```ts
- * // app/api/matomo/[...path]/route.ts
+ * // app/api/mp/[...path]/route.ts
  * import { createMatomoProxyHandler } from "@socialgouv/matomo-next/lib/server-proxy";
  * export const { GET, POST } = createMatomoProxyHandler();
  * ```

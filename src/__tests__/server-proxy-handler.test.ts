@@ -34,7 +34,7 @@ describe("createMatomoProxyHandler", () => {
     delete process.env.MATOMO_PROXY_TARGET;
     const { GET } = createMatomoProxyHandler();
 
-    const request = new Request("http://localhost/api/matomo/matomo.js");
+    const request = new Request("http://localhost/api/mp/matomo.js");
     const response = await GET(request, {
       params: Promise.resolve({ path: ["matomo.js"] }),
     });
@@ -52,7 +52,7 @@ describe("createMatomoProxyHandler", () => {
       .mockResolvedValue(mockResponse);
 
     const { GET } = createMatomoProxyHandler();
-    const request = new Request("http://localhost/api/matomo/matomo.js");
+    const request = new Request("http://localhost/api/mp/matomo.js");
     const response = await GET(request, {
       params: Promise.resolve({ path: ["matomo.js"] }),
     });
@@ -76,7 +76,7 @@ describe("createMatomoProxyHandler", () => {
       .mockResolvedValue(mockResponse);
 
     const { GET } = createMatomoProxyHandler();
-    const request = new Request("http://localhost/api/matomo/s3fa1c0d2e4.js");
+    const request = new Request("http://localhost/api/mp/s3fa1c0d2e4.js");
     const response = await GET(request, {
       params: Promise.resolve({ path: ["s3fa1c0d2e4.js"] }),
     });
@@ -97,7 +97,7 @@ describe("createMatomoProxyHandler", () => {
       .mockResolvedValue(mockResponse);
 
     const { POST } = createMatomoProxyHandler();
-    const request = new Request("http://localhost/api/matomo/t3fa1c0d2e4", {
+    const request = new Request("http://localhost/api/mp/t3fa1c0d2e4", {
       method: "POST",
       body: "idsite=1&rec=1",
       headers: { "content-type": "application/x-www-form-urlencoded" },
@@ -123,7 +123,7 @@ describe("createMatomoProxyHandler", () => {
       .mockResolvedValue(mockResponse);
 
     const { POST } = createMatomoProxyHandler();
-    const request = new Request("http://localhost/api/matomo/matomo.php", {
+    const request = new Request("http://localhost/api/mp/matomo.php", {
       method: "POST",
       body: "idsite=1&rec=1",
       headers: { "content-type": "application/x-www-form-urlencoded" },
@@ -149,7 +149,7 @@ describe("createMatomoProxyHandler", () => {
 
     const { GET } = createMatomoProxyHandler();
     const request = new Request(
-      "http://localhost/api/matomo/matomo.php?idsite=1&rec=1",
+      "http://localhost/api/mp/matomo.php?idsite=1&rec=1",
     );
     await GET(request, {
       params: Promise.resolve({ path: ["matomo.php"] }),
@@ -169,7 +169,7 @@ describe("createMatomoProxyHandler", () => {
       .mockResolvedValue(mockResponse);
 
     const { GET } = createMatomoProxyHandler();
-    const request = new Request("http://localhost/api/matomo/matomo.php", {
+    const request = new Request("http://localhost/api/mp/matomo.php", {
       headers: {
         "user-agent": "Mozilla/5.0",
         "accept-language": "en-US",
@@ -194,7 +194,7 @@ describe("createMatomoProxyHandler", () => {
       .mockResolvedValue(mockResponse);
 
     const { GET } = createMatomoProxyHandler();
-    const request = new Request("http://localhost/api/matomo/matomo.php", {
+    const request = new Request("http://localhost/api/mp/matomo.php", {
       headers: { "x-forwarded-for": "1.2.3.4" },
     });
     await GET(request, {
@@ -214,7 +214,7 @@ describe("createMatomoProxyHandler", () => {
       .mockRejectedValue(new Error("Network error"));
 
     const { GET } = createMatomoProxyHandler();
-    const request = new Request("http://localhost/api/matomo/matomo.php");
+    const request = new Request("http://localhost/api/mp/matomo.php");
     const response = await GET(request, {
       params: Promise.resolve({ path: ["matomo.php"] }),
     });
@@ -232,7 +232,7 @@ describe("createMatomoProxyHandler", () => {
 
     const { GET } = createMatomoProxyHandler();
     const request = new Request(
-      "http://localhost/api/matomo/plugins/HeatmapSessionRecording/tracker.min.js",
+      "http://localhost/api/mp/plugins/HeatmapSessionRecording/tracker.min.js",
     );
     await GET(request, {
       params: Promise.resolve({
@@ -255,7 +255,7 @@ describe("createMatomoProxyHandler", () => {
       .mockResolvedValue(mockResponse);
 
     const { GET } = createMatomoProxyHandler();
-    const request = new Request("http://localhost/api/matomo/matomo.js");
+    const request = new Request("http://localhost/api/mp/matomo.js");
     // Next.js 13/14 passes params as a plain object (not a Promise)
     const response = await GET(request, {
       params: { path: ["matomo.js"] } as any,
