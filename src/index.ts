@@ -33,6 +33,13 @@ export {
   readABTestState,
 } from "./use-ab-test";
 
+// Export Matomo Tag Manager integration
+export { initTagManager, pushTagManager } from "./tag-manager";
+export type {
+  TagManagerSettings,
+  TagManagerDataLayerEntry,
+} from "./tag-manager";
+
 // Export server-side proxy utilities
 export {
   withMatomoProxy,

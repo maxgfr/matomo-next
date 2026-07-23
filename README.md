@@ -24,6 +24,7 @@ A lightweight, TypeScript-ready Matomo analytics integration for Next.js applica
 - ✅ **GDPR Compliant** - Cookie-less tracking option
 - ✅ **Custom Events** - Type-safe event tracking API
 - ✅ **A/B Testing** - Built-in support for Matomo's A/B Testing plugin with React hooks
+- ✅ **Tag Manager** - Load a Matomo Tag Manager container and push to its data layer
 - ✅ **Server-Side Proxy** - Bypass ad-blockers by routing tracking through your own domain
 - ✅ **Heatmap & Session Recording** - Optional user behavior visualization
 - ✅ **TypeScript Support** - Full type safety and auto-completion
@@ -114,6 +115,7 @@ export default function RootLayout({ children }) {
 - **[Advanced Configuration](docs/advanced.md)** - All configuration options, HeartBeat timer, callbacks, and extensibility
 - **[Event Tracking](docs/events.md)** - Track custom user interactions
 - **[A/B Testing](docs/ab-testing.md)** - Integrate Matomo's A/B Testing plugin with React hooks
+- **[Tag Manager](docs/tag-manager.md)** - Load a Matomo Tag Manager container and push events to it
 - **[Server-Side Proxy](docs/server-side-proxy.md)** - Bypass ad-blockers by proxying tracking requests
 - **[Heatmap & Session Recording](docs/heatmap-session-recording.md)** - User behavior tracking and visualization
 - **[Security & Privacy](docs/security.md)** - CSP configuration and GDPR compliance
