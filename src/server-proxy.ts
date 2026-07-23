@@ -7,8 +7,8 @@
  *
  * How it works:
  * 1. `withMatomoProxy()` generates a random path at build time (e.g. `/api/a3f7b2c1e9`)
- * 2. It adds a Next.js rewrite: `/api/{random}/:path*` → `/api/__mp/:path*`
- * 3. You create a catch-all API route at `app/api/__mp/[...path]/route.ts`
+ * 2. It adds a Next.js rewrite: `/api/{random}/:path*` → `/api/matomo/:path*`
+ * 3. You create a catch-all API route at `app/api/matomo/[...path]/route.ts`
  *    that uses `createMatomoProxyHandler()` to forward requests to Matomo
  * 4. The browser only ever talks to YOUR domain — ad-blockers see nothing suspicious
  * 5. Each build produces a different path, so blockers can't hardcode it
@@ -38,6 +38,20 @@ export interface MatomoProxyOptions {
    * @default auto-generated random path per build
    */
   proxyPath?: string;
+  /**
+   * Internal path of the API route that hosts `createMatomoProxyHandler()`.
+   * This is the rewrite *destination* — the browser never sees it.
+   *
+   * ⚠️ Avoid path segments starting with `_`: the App Router treats
+   * `_`-prefixed folders as private folders and excludes them from routing,
+   * so the internal route would 404.
+   *
+   * Set it to `/api/__mp` only if you have an existing Pages Router setup
+   * at `pages/api/__mp/[...path].ts` that you don't want to rename.
+   *
+   * @default "/api/matomo"
+   */
+  handlerPath?: string;
   /**
    * Matomo Site ID – exposed as a build-time env var
    * `NEXT_PUBLIC_MATOMO_PROXY_SITE_ID` for the client to consume.
@@ -126,6 +140,11 @@ export function generateProxyPath(): string {
 // withMatomoProxy – Next.js config wrapper
 // ---------------------------------------------------------------------------
 
+// The internal route is never seen by the browser (it's a server-side rewrite
+// destination), so it doesn't need to be opaque. It must be routable in BOTH
+// routers — in particular, no `_`-prefixed segment (App Router private folder).
+const DEFAULT_HANDLER_PATH = "/api/matomo";
+
 /**
  * Wraps your Next.js config to add a server-side proxy for Matomo.
  *
@@ -136,7 +155,7 @@ export function generateProxyPath(): string {
  * 4. Exposes `MATOMO_PROXY_TARGET` (server-only) for the API route handler
  *
  * The browser sends tracking requests to `yoursite.com/api/{random}/{opaque}`.
- * Next.js rewrites them to `/api/__mp/{opaque}`, where the handler
+ * Next.js rewrites them to `/api/matomo/{opaque}`, where the handler
  * forwards them to your Matomo instance.
  *
  * @example
@@ -152,7 +171,7 @@ export function generateProxyPath(): string {
  * ```
  */
 export function withMatomoProxy(options: MatomoProxyOptions) {
-  const { matomoUrl, proxyPath, siteId } = options;
+  const { matomoUrl, proxyPath, siteId, handlerPath } = options;
 
   // Clean trailing slash
   const cleanMatomoUrl = matomoUrl.replace(/\/+$/, "");
@@ -160,6 +179,23 @@ export function withMatomoProxy(options: MatomoProxyOptions) {
   // naturally calls your own API, and you don't need to put your domain in
   // Matomo params.
   const resolvedProxyPath = proxyPath ?? `/api${generateProxyPath()}`;
+
+  // Internal route hosting the proxy handler. Must NOT contain `_`-prefixed
+  // segments: the App Router treats those as private folders (excluded from
+  // routing), which turns the rewrite destination into a 404.
+  const resolvedHandlerPath = (handlerPath ?? DEFAULT_HANDLER_PATH).replace(
+    /\/+$/,
+    "",
+  );
+  if (
+    resolvedHandlerPath.split("/").some((segment) => segment.startsWith("_"))
+  ) {
+    console.warn(
+      `[matomo-next] handlerPath "${resolvedHandlerPath}" contains a path segment starting with "_". ` +
+        `The Next.js App Router treats "_"-prefixed folders as private folders and excludes them from routing, ` +
+        `so this route will 404 unless you use the Pages Router (or URL-encode the folder name, e.g. "%5F%5Fmp").`,
+    );
+  }
 
   // Optional: hide upstream file names too (some blockers match on `/matomo.js` / `/matomo.php`).
   // These are build-time values, stable until the next build.
@@ -173,7 +209,7 @@ export function withMatomoProxy(options: MatomoProxyOptions) {
     const matomoRewrites: NextRewrite[] = [
       {
         source: `${resolvedProxyPath}/:path*`,
-        destination: `/api/__mp/:path*`,
+        destination: `${resolvedHandlerPath}/:path*`,
       },
     ];
 
@@ -227,8 +263,8 @@ export function withMatomoProxy(options: MatomoProxyOptions) {
  *
  * @example
  * ```ts
- * // app/api/__mp/[...path]/route.ts
- * import { createMatomoProxyHandler } from "@socialgouv/matomo-next";
+ * // app/api/matomo/[...path]/route.ts
+ * import { createMatomoProxyHandler } from "@socialgouv/matomo-next/lib/server-proxy";
  * export const { GET, POST } = createMatomoProxyHandler();
  * ```
  */
