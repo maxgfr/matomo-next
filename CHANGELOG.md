@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/SocialGouv/matomo-next/compare/v1.13.2...v1.14.0) (2026-07-23)
+
+
+### Features
+
+* add Matomo Tag Manager support ([#162](https://github.com/SocialGouv/matomo-next/issues/162)) ([5cb59bf](https://github.com/SocialGouv/matomo-next/commit/5cb59bf2e2a70b08395bdb3298c9c733b962b898))
+
 ## [1.13.2](https://github.com/SocialGouv/matomo-next/compare/v1.13.1...v1.13.2) (2026-07-23)
 
 
