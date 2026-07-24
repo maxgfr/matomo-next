@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/SocialGouv/matomo-next/compare/v1.14.1...v1.14.2) (2026-07-24)
+
+
+### Bug Fixes
+
+* **clean-url:** apply cleanUrl on the initial pageview ([#164](https://github.com/SocialGouv/matomo-next/issues/164)) ([de0ccd1](https://github.com/SocialGouv/matomo-next/commit/de0ccd1c7021878656a0820f7de08a106606a684))
+
 ## [1.14.1](https://github.com/SocialGouv/matomo-next/compare/v1.14.0...v1.14.1) (2026-07-23)
 
 
